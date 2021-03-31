@@ -1,0 +1,88 @@
+esphome:
+  name: doorbell
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "Schnuff"
+  password: !secret wifi_password
+
+  manual_ip:
+    static_ip: 192.168.0.5
+    gateway: 192.168.0.1
+    subnet: 255.255.255.0
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Doorbell Fallback Hotspot"
+    password: !secret wifi_fallback_password
+    ap_timeout: 30min
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+globals:
+  - id: bell_active
+    type: bool
+    restore_value: true
+    initial_value: 'true'
+
+switch:
+  - platform: gpio
+    id: bell
+    pin: 0
+  - platform: template
+    name: "Jetzt klingeln"
+    lambda: |-
+      return false;
+    turn_on_action:
+      - script.execute: ring_bell
+  - platform: template
+    name: Klingelsperre
+    lambda: |-
+      return !id(bell_active);
+    turn_on_action:
+      - globals.set:
+          id: bell_active
+          value: 'false'
+    turn_off_action:
+      - globals.set:
+          id: bell_active
+          value: 'true'
+
+
+binary_sensor:
+  - platform: gpio
+    name: "Klingeltaster"
+    pin:
+      number: 2
+      inverted: true
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on: 20ms
+      - delayed_off: 2s
+    on_press:
+      - if:
+          condition:
+            lambda: return id(bell_active);
+          then:
+            - script.execute: ring_bell
+
+script:
+  - id: ring_bell
+    mode: single
+    then:
+      - switch.turn_on: bell
+      - delay: 400ms
+      - switch.turn_off: bell
+      - delay: 700ms
+      - switch.turn_on: bell
+      - delay: 400ms
+      - switch.turn_off: bell
