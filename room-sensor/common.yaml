@@ -1,0 +1,56 @@
+esphome:
+  name: $device_name
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+  ssid: "Kerberos"
+  password: !secret wifi_password
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+font:
+  - file: "DejaVuSans.ttf"
+    id: deja_vu
+    size: 18
+  - file: "DejaVuSans.ttf"
+    id: deja_vu_big
+    size: 32
+
+i2c:
+  sda: GPIO33
+  scl: GPIO32
+
+# TODO: de-rotate 
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    rotation: 180°
+    address: 0x3C
+    lambda: |-
+      it.printf(0, 64, id(deja_vu), TextAlign::BOTTOM_LEFT,"%.1f°C", id(temperature).state);
+      it.printf(128, 64, id(deja_vu), TextAlign::BOTTOM_RIGHT,"%.1f%%", id(humidity).state);
+      it.strftime(64, 0, id(deja_vu_big), TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
+
+sensor:
+  - platform: bme280
+    temperature:
+      id: temperature
+      name: ${room_name} Temperatur
+    pressure:
+      id: pressure
+    humidity:
+      id: humidity
+      name: ${room_name} Luftfeuchte
+    address: 0x76
+    update_interval: 60s
+
+time:
+  - platform: homeassistant
+    id: ha_time

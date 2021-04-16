@@ -1,0 +1,6 @@
+substitutions:
+  device_name: sensor-arbeitszimmer
+  room_name: Arbeitszimmer
+
+
+<<: !include common.yaml
