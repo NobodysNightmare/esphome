@@ -27,11 +27,10 @@ i2c:
   sda: GPIO33
   scl: GPIO32
 
-# TODO: de-rotate 
 display:
   - platform: ssd1306_i2c
     model: "SSD1306 128x64"
-    rotation: 180°
+    rotation: 0°
     address: 0x3C
     lambda: |-
       it.printf(0, 64, id(deja_vu), TextAlign::BOTTOM_LEFT,"%.1f°C", id(temperature).state);
