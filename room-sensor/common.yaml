@@ -34,7 +34,7 @@ display:
     address: 0x3C
     lambda: |-
       it.printf(0, 64, id(deja_vu), TextAlign::BOTTOM_LEFT,"%.1f°C", id(temperature).state);
-      it.printf(128, 64, id(deja_vu), TextAlign::BOTTOM_RIGHT,"%.1f%%", id(humidity).state);
+      it.printf(128, 64, id(deja_vu), TextAlign::BOTTOM_RIGHT,"%.0f%%", id(humidity).state);
       it.strftime(64, 0, id(deja_vu_big), TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
 
 sensor:
@@ -44,6 +44,7 @@ sensor:
       name: ${room_name} Temperatur
     pressure:
       id: pressure
+      name: ${room_name} Luftdruck
     humidity:
       id: humidity
       name: ${room_name} Luftfeuchte
