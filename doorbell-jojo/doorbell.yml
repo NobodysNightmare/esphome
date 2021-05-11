@@ -25,6 +25,7 @@ logger:
 
 # Enable Home Assistant API
 api:
+  reboot_timeout: 6h
 
 ota:
 
@@ -68,7 +69,7 @@ binary_sensor:
       inverted: true
       mode: INPUT_PULLUP
     filters:
-      - delayed_on: 20ms
+      - delayed_on: 50ms
       - delayed_off: 2s
     on_press:
       - if:
