@@ -27,7 +27,7 @@ font:
     glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
   - file: "DejaVuSans.ttf"
     id: font_l
-    size: 64
+    size: 128
     glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
 
 mcp23017:
@@ -98,11 +98,11 @@ display:
     lambda: |-
       it.fill(COLOR_ON);
 
-      it.strftime(10,  80, id(font_l), COLOR_OFF, TextAlign::BASELINE_LEFT, "%H:%M", id(ha_time).now());
-      it.strftime(210, 80, id(font_m), COLOR_OFF, TextAlign::BASELINE_LEFT, "%A, %d.%m.%Y", id(ha_time).now());
-      it.line(0, 90, 600, 90, COLOR_OFF);
-      it.line(0, 91, 600, 91, COLOR_OFF);
-      it.line(0, 92, 600, 92, COLOR_OFF);
+      it.strftime(400,  10, id(font_l), COLOR_OFF, TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
+      it.strftime(400, 150, id(font_m), COLOR_OFF, TextAlign::TOP_CENTER, "%A, %d.%m.%Y", id(ha_time).now());
+      it.line(220, 140, 580, 140, COLOR_OFF);
+      it.line(220, 141, 580, 141, COLOR_OFF);
+      it.line(220, 142, 580, 142, COLOR_OFF);
 
       it.printf(110, 495, id(font_m), COLOR_OFF, TextAlign::BASELINE_CENTER, "Hier");
       it.line(50, 500, 170, 500, COLOR_OFF);
