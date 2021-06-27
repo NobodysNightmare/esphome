@@ -22,8 +22,12 @@ ota:
 
 font:
   - file: "DejaVuSans.ttf"
-    id: font_m
+    id: font_s
     size: 38
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
+  - file: "DejaVuSans.ttf"
+    id: font_m
+    size: 72
     glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
   - file: "DejaVuSans.ttf"
     id: font_l
@@ -43,6 +47,24 @@ sensor:
   - platform: homeassistant
     id: az_hum
     entity_id: sensor.arbeitszimmer_luftfeuchte
+  - platform: homeassistant
+    id: out_temp
+    entity_id: sensor.garten_temperatur
+  - platform: homeassistant
+    id: out_hum
+    entity_id: sensor.garten_luftfeuchte
+  - platform: bme280
+    temperature:
+      id: temperature
+      name: Wohnzimmer Temperatur
+    pressure:
+      id: pressure
+      name: Wohnzimmer Luftdruck
+    humidity:
+      id: humidity
+      name: Wohnzimmer Luftfeuchte
+    address: 0x76
+    update_interval: 60s
 
 binary_sensor:
   - platform: gpio
@@ -69,8 +91,8 @@ display:
     id: main_display
     greyscale: false
     partial_updating: true
-    update_interval: 10s
-    full_update_every: 30
+    update_interval: 30s
+    full_update_every: 10
     rotation: 0°
     ckv_pin: 32
     sph_pin: 33
@@ -99,30 +121,28 @@ display:
       it.fill(COLOR_ON);
 
       it.strftime(400,  10, id(font_l), COLOR_OFF, TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
-      it.strftime(400, 150, id(font_m), COLOR_OFF, TextAlign::TOP_CENTER, "%A, %d.%m.%Y", id(ha_time).now());
+      it.strftime(400, 150, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%A, %d.%m.%Y", id(ha_time).now());
       it.line(220, 140, 580, 140, COLOR_OFF);
       it.line(220, 141, 580, 141, COLOR_OFF);
       it.line(220, 142, 580, 142, COLOR_OFF);
 
-      it.printf(110, 495, id(font_m), COLOR_OFF, TextAlign::BASELINE_CENTER, "Hier");
-      it.line(50, 500, 170, 500, COLOR_OFF);
-      it.printf(170, 540, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- °C");
-      it.printf(170, 585, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- %%");
+      it.printf(750, 340, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(temperature).state);
+      it.printf(750, 420, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(humidity).state);
 
-      it.printf(270, 495, id(font_m), COLOR_OFF, TextAlign::BASELINE_CENTER, "Außen");
+      it.printf(270, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "Außen");
       it.line(220, 500, 340, 500, COLOR_OFF);
-      it.printf(340, 540, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- °C");
-      it.printf(340, 585, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- %%");
+      it.printf(340, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(out_temp).state);
+      it.printf(340, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(out_hum).state);
 
-      it.printf(450, 495, id(font_m), COLOR_OFF, TextAlign::BASELINE_CENTER, "Arbeit");
+      it.printf(450, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "Arbeit");
       it.line(390, 500, 510, 500, COLOR_OFF);
-      it.printf(510, 540, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(az_temp).state);
-      it.printf(510, 585, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(az_hum).state);
+      it.printf(510, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(az_temp).state);
+      it.printf(510, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(az_hum).state);
 
-      it.printf(620, 495, id(font_m), COLOR_OFF, TextAlign::BASELINE_CENTER, "Bad");
+      it.printf(620, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "Bad");
       it.line(560, 500, 680, 500, COLOR_OFF);
-      it.printf(680, 540, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- °C");
-      it.printf(680, 585, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- %%");
+      it.printf(680, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- °C");
+      it.printf(680, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- %%");
 
 time:
   - platform: homeassistant
