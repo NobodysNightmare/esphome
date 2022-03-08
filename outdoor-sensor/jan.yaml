@@ -1,0 +1,6 @@
+substitutions:
+  device_name: sensor-garten
+  room_name: Garten
+
+
+<<: !include common.yaml

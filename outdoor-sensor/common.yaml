@@ -1,0 +1,29 @@
+esphome:
+  name: $device_name
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+  ssid: "Kerberos"
+  password: !secret wifi_password
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: dht
+    pin: GPIO13
+    model: DHT22_TYPE2
+    temperature:
+      name: ${room_name} Temperatur
+      filters:
+        - lambda: "return x < -100 ? -100.0 : x;"
+        - filter_out: -100.0
+    humidity:
+      name: ${room_name} Luftfeuchte
+    update_interval: 60s
