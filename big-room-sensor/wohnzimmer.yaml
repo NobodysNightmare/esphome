@@ -48,6 +48,12 @@ sensor:
     id: az_hum
     entity_id: sensor.arbeitszimmer_luftfeuchte
   - platform: homeassistant
+    id: jo_temp
+    entity_id: sensor.joris_temperatur
+  - platform: homeassistant
+    id: jo_hum
+    entity_id: sensor.joris_luftfeuchte
+  - platform: homeassistant
     id: out_temp
     entity_id: sensor.garten_temperatur
   - platform: homeassistant
@@ -139,10 +145,10 @@ display:
       it.printf(510, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(az_temp).state);
       it.printf(510, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(az_hum).state);
 
-      it.printf(620, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "Bad");
+      it.printf(620, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "Joris");
       it.line(560, 500, 680, 500, COLOR_OFF);
-      it.printf(680, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- °C");
-      it.printf(680, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "- %%");
+      it.printf(680, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT,"%.1f°C", id(jo_temp).state);
+      it.printf(680, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(jo_hum).state);
 
 time:
   - platform: homeassistant

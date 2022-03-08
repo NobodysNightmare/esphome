@@ -42,6 +42,8 @@ sensor:
     temperature:
       id: temperature
       name: ${room_name} Temperatur
+      filters:
+      - offset: -1
     pressure:
       id: pressure
       name: ${room_name} Luftdruck

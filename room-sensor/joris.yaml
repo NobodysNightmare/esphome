@@ -1,0 +1,6 @@
+substitutions:
+  device_name: sensor-joris
+  room_name: Joris
+
+
+<<: !include common.yaml
