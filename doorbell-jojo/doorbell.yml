@@ -1,7 +1,7 @@
 esphome:
   name: doorbell
   platform: ESP8266
-  board: esp01_1m
+  board: d1_mini
 
 wifi:
   ssid: "Schnuff"
@@ -38,8 +38,8 @@ globals:
 switch:
   - platform: gpio
     id: bell
-    pin: 0
-    inverted: true
+    pin: D1
+    inverted: false
     restore_mode: ALWAYS_OFF
   - platform: template
     name: "Jetzt klingeln"
@@ -65,11 +65,11 @@ binary_sensor:
   - platform: gpio
     name: "Klingeltaster"
     pin:
-      number: 2
+      number: D7
       inverted: true
-      mode: INPUT_PULLUP
+      mode: INPUT
     filters:
-      - delayed_on: 150ms
+      - delayed_on: 100ms
       - delayed_off: 2s
     on_press:
       - if:
