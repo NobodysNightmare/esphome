@@ -1,0 +1,146 @@
+esphome:
+  name: $device_name
+  platform: ESP32
+  board: esp-wrover-kit
+
+wifi:
+  ssid: ${wifi_ssid}
+  password: ${wifi_password}
+
+  manual_ip:
+    static_ip: ${ip_address}
+    gateway: ${gateway}
+    subnet: ${subnet}
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+font:
+  - file: "DejaVuSans.ttf"
+    id: font_s
+    size: 38
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
+  - file: "DejaVuSans.ttf"
+    id: font_m
+    size: 72
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
+  - file: "DejaVuSans.ttf"
+    id: font_l
+    size: 128
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
+
+mcp23017:
+  - id: mcp23017_hub
+    address: 0x20
+
+i2c:
+
+sensor:
+  - platform: homeassistant
+    id: s1_temp
+    entity_id: sensor.${sensor1_id}_temperatur
+  - platform: homeassistant
+    id: s1_hum
+    entity_id: sensor.${sensor1_id}_luftfeuchte
+  - platform: homeassistant
+    id: s2_temp
+    entity_id: sensor.${sensor2_id}_temperatur
+  - platform: homeassistant
+    id: s2_hum
+    entity_id: sensor.${sensor2_id}_luftfeuchte
+  - platform: homeassistant
+    id: s3_temp
+    entity_id: sensor.${sensor3_id}_temperatur
+  - platform: homeassistant
+    id: s3_hum
+    entity_id: sensor.${sensor3_id}_luftfeuchte
+  - platform: homeassistant
+    id: s4_temp
+    entity_id: sensor.${sensor4_id}_temperatur
+  - platform: homeassistant
+    id: s4_hum
+    entity_id: sensor.${sensor4_id}_luftfeuchte
+  - platform: bme280
+    temperature:
+      id: temperature
+      name: ${room_name} Temperatur
+    pressure:
+      id: pressure
+      name: ${room_name} Luftdruck
+    humidity:
+      id: humidity
+      name: ${room_name} Luftfeuchte
+    address: 0x76
+    update_interval: 60s
+
+display:
+  - platform: inkplate6
+    id: main_display
+    greyscale: false
+    partial_updating: true
+    update_interval: 30s
+    full_update_every: 10
+    rotation: 0°
+    ckv_pin: 32
+    sph_pin: 33
+    gmod_pin:
+      mcp23xxx: mcp23017_hub
+      number: 1
+    gpio0_enable_pin:
+      mcp23xxx: mcp23017_hub
+      number: 8
+    oe_pin:
+      mcp23xxx: mcp23017_hub
+      number: 0
+    spv_pin:
+      mcp23xxx: mcp23017_hub
+      number: 2
+    powerup_pin:
+      mcp23xxx: mcp23017_hub
+      number: 4
+    wakeup_pin:
+      mcp23xxx: mcp23017_hub
+      number: 3
+    vcom_pin:
+      mcp23xxx: mcp23017_hub
+      number: 5
+    lambda: |-
+      it.fill(COLOR_ON);
+
+      it.strftime(400,  10, id(font_l), COLOR_OFF, TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
+      it.strftime(400, 150, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%A, %d.%m.%Y", id(ha_time).now());
+      it.line(220, 140, 580, 140, COLOR_OFF);
+      it.line(220, 141, 580, 141, COLOR_OFF);
+      it.line(220, 142, 580, 142, COLOR_OFF);
+
+      it.printf(750, 340, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(temperature).state);
+      it.printf(750, 420, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(humidity).state);
+
+      it.printf(110, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor1_name}");
+      it.line(50, 500, 170, 500, COLOR_OFF);
+      it.printf(170, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(s1_temp).state);
+      it.printf(170, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s1_hum).state);
+
+      it.printf(280, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor2_name}");
+      it.line(220, 500, 340, 500, COLOR_OFF);
+      it.printf(340, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(s2_temp).state);
+      it.printf(340, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s2_hum).state);
+
+      it.printf(450, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor3_name}");
+      it.line(390, 500, 510, 500, COLOR_OFF);
+      it.printf(510, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(s3_temp).state);
+      it.printf(510, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s3_hum).state);
+
+      it.printf(620, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor4_name}");
+      it.line(560, 500, 680, 500, COLOR_OFF);
+      it.printf(680, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT,"%.1f°C", id(s4_temp).state);
+      it.printf(680, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s4_hum).state);
+
+time:
+  - platform: homeassistant
+    id: ha_time

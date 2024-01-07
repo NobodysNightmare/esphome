@@ -1,8 +1,8 @@
 substitutions:
-  device_name: wohnzimmer
-  room_name: Wohnzimmer
+  device_name: schlafzimmer
+  room_name: Schlafzimmer
 
-  ip_address: 10.13.37.14
+  ip_address: 10.13.37.15
   gateway: 10.13.37.1
   subnet: 255.255.255.0
   wifi_ssid: Kerberos
@@ -14,7 +14,7 @@ substitutions:
   sensor2_id: arbeitszimmer
   sensor3_name: Joris
   sensor3_id: joris
-  sensor4_name: Schlaf
-  sensor4_id: schlafzimmer
+  sensor4_name: Wohn
+  sensor4_id: wohnzimmer
 
 <<: !include common.yaml

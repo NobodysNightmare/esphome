@@ -2,18 +2,18 @@ substitutions:
   device_name: wohnzimmer
   room_name: Wohnzimmer
 
-  ip_address: 10.13.37.14
-  gateway: 10.13.37.1
+  ip_address: 192.168.0.14 # TODO: choose one
+  gateway: 192.168.0.1
   subnet: 255.255.255.0
-  wifi_ssid: Kerberos
-  wifi_password: !secret wifi_password_jan
+  wifi_ssid: Schnuff
+  wifi_password: !secret wifi_password_jojo
 
   sensor1_name: Außen
   sensor1_id: garten
   sensor2_name: Arbeit
   sensor2_id: arbeitszimmer
-  sensor3_name: Joris
-  sensor3_id: joris
+  sensor3_name: Oma
+  sensor3_id: oma
   sensor4_name: Schlaf
   sensor4_id: schlafzimmer
 
