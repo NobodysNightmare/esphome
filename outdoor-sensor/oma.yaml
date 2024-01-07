@@ -1,0 +1,6 @@
+substitutions:
+  device_name: sensor-oma
+  room_name: Oma
+
+
+<<: !include common-jojo.yaml
