@@ -33,9 +33,14 @@ display:
     rotation: 0°
     address: 0x3C
     lambda: |-
-      it.printf(0, 64, id(deja_vu), TextAlign::BOTTOM_LEFT,"%.1f°C", id(temperature).state);
-      it.printf(128, 64, id(deja_vu), TextAlign::BOTTOM_RIGHT,"%.0f%%", id(humidity).state);
       it.strftime(64, 0, id(deja_vu_big), TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
+
+      if (id(message).state.empty()) {
+        it.printf(0, 64, id(deja_vu), TextAlign::BOTTOM_LEFT,"%.1f°C", id(temperature).state);
+        it.printf(128, 64, id(deja_vu), TextAlign::BOTTOM_RIGHT,"%.0f%%", id(humidity).state);
+      } else {
+        it.printf(64, 64, id(deja_vu), TextAlign::BOTTOM_CENTER, "%s", id(message).state.c_str());
+      }
 
 sensor:
   - platform: bme280
@@ -56,3 +61,28 @@ sensor:
 time:
   - platform: homeassistant
     id: ha_time
+
+text:
+  - id: message
+    name: ${room_name} Nachricht
+    platform: template
+    optimistic: true
+    max_length: 32
+    mode: text
+    initial_value: ""
+    set_action:
+      then:
+        - if:
+            condition:
+              lambda: 'return !x.empty();'
+            then:
+              - script.execute: clear_message
+
+script:
+  - id: clear_message
+    mode: "restart"
+    then:
+      - delay: 60s
+      - text.set:
+          id: message
+          value: ""
