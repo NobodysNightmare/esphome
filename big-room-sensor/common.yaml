@@ -106,19 +106,19 @@ sensor:
 binary_sensor:
   - platform: homeassistant
     id: local_window
-    entity_id: binary_sensor.${local_window_id}_offnet
+    entity_id: binary_sensor.${local_window_sensor}
   - platform: homeassistant
     id: s1_window
-    entity_id: binary_sensor.${s1_window_id}_offnet
+    entity_id: binary_sensor.${s1_window_sensor}
   - platform: homeassistant
     id: s2_window
-    entity_id: binary_sensor.${s2_window_id}_offnet
+    entity_id: binary_sensor.${s2_window_sensor}
   - platform: homeassistant
     id: s3_window
-    entity_id: binary_sensor.${s3_window_id}_offnet
+    entity_id: binary_sensor.${s3_window_sensor}
   - platform: homeassistant
     id: s4_window
-    entity_id: binary_sensor.${s4_window_id}_offnet
+    entity_id: binary_sensor.${s4_window_sensor}
 
 display:
   - platform: inkplate6
@@ -162,14 +162,16 @@ display:
       it.line(220, 142, 580, 142, COLOR_OFF);
 
       // Current home power
-      it.image(20, 10, id(image_grid_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
-      if (id(home_power) > 0) {
-        it.image(56, 10, id(image_arrow_right_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
-      } else {
-        it.image(56, 10, id(image_arrow_left_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+      if(!isnan(id(home_power).state)) {
+        it.image(20, 10, id(image_grid_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        if (id(home_power).state > 0) {
+          it.image(56, 10, id(image_arrow_right_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        } else {
+          it.image(56, 10, id(image_arrow_left_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        }
+        it.image(92, 10, id(image_home_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
       }
-      it.image(92, 10, id(image_home_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
-      it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
 
       // local sensors
       it.printf(750, 340, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(temperature).state);
