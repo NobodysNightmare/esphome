@@ -43,6 +43,18 @@ image:
   - file: mdi:window-closed
     id: image_window_m
     resize: 72x72
+  - file: mdi:transmission-tower
+    id: image_grid_s
+    resize: 38x38
+  - file: mdi:home
+    id: image_home_s
+    resize: 38x38
+  - file: mdi:arrow-left-bold
+    id: image_arrow_left_s
+    resize: 38x38
+  - file: mdi:arrow-right-bold
+    id: image_arrow_right_s
+    resize: 38x38
 
 mcp23017:
   - id: mcp23017_hub
@@ -75,6 +87,9 @@ sensor:
   - platform: homeassistant
     id: s4_hum
     entity_id: sensor.${sensor4_id}_luftfeuchte
+  - platform: homeassistant
+    id: home_power
+    entity_id: sensor.${home_power_sensor}
   - platform: bme280_i2c
     temperature:
       id: temperature
@@ -139,17 +154,31 @@ display:
     lambda: |-
       it.fill(COLOR_ON);
 
+      // time and date
       it.strftime(400,  10, id(font_l), COLOR_OFF, TextAlign::TOP_CENTER, "%H:%M", id(ha_time).now());
       it.strftime(400, 150, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%A, %d.%m.%Y", id(ha_time).now());
       it.line(220, 140, 580, 140, COLOR_OFF);
       it.line(220, 141, 580, 141, COLOR_OFF);
       it.line(220, 142, 580, 142, COLOR_OFF);
 
+      // Current home power
+      it.image(20, 10, id(image_grid_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+      if (id(home_power) > 0) {
+        it.image(56, 10, id(image_arrow_right_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+      } else {
+        it.image(56, 10, id(image_arrow_left_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+      }
+      it.image(92, 10, id(image_home_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+      it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
+
+      // local sensors
       it.printf(750, 340, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(temperature).state);
       it.printf(750, 420, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(humidity).state);
       if(id(local_window).state) {
         it.image(510, 420+5, id(image_window_m), ImageAlign::BOTTOM_LEFT, COLOR_OFF, COLOR_ON);
       }
+
+      // remote sensors
 
       it.printf(110, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor1_name}");
       it.line(50, 500, 170, 500, COLOR_OFF);
