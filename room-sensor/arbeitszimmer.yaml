@@ -1,6 +1,7 @@
 substitutions:
   device_name: sensor-arbeitszimmer
   room_name: Arbeitszimmer
+  home_power_sensor: "netz_leistung_1min_schnitt"
 
 
 <<: !include common.yaml
