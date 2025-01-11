@@ -23,5 +23,6 @@ substitutions:
   s2_window_sensor: garagentor_offnet
   s3_window_sensor: fenster_joris_offnet
   s4_window_sensor: alle_wohnzimmer_fenster_offnet
+  any_window_sensor: irgendein_fenster
 
 <<: !include common.yaml

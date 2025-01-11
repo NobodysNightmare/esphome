@@ -119,6 +119,9 @@ binary_sensor:
   - platform: homeassistant
     id: s4_window
     entity_id: binary_sensor.${s4_window_sensor}
+  - platform: homeassistant
+    id: any_window
+    entity_id: binary_sensor.${any_window_sensor}
 
 display:
   - platform: inkplate6
@@ -171,6 +174,11 @@ display:
         }
         it.image(92, 10, id(image_home_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
         it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
+      }
+
+      // top right indicators
+      if(id(any_window).state) {
+        it.image(780, 10, id(image_window_s), ImageAlign::TOP_RIGHT, COLOR_OFF, COLOR_ON);
       }
 
       // local sensors
