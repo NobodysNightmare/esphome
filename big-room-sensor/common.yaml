@@ -19,6 +19,8 @@ logger:
 api:
 
 ota:
+  - platform: esphome
+    password: !secret ota_password
 
 font:
   - file: "DejaVuSans.ttf"
@@ -33,6 +35,14 @@ font:
     id: font_l
     size: 128
     glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
+
+image:
+  - file: mdi:window-closed
+    id: image_window_s
+    resize: 38x38
+  - file: mdi:window-closed
+    id: image_window_m
+    resize: 72x72
 
 mcp23017:
   - id: mcp23017_hub
@@ -65,7 +75,7 @@ sensor:
   - platform: homeassistant
     id: s4_hum
     entity_id: sensor.${sensor4_id}_luftfeuchte
-  - platform: bme280
+  - platform: bme280_i2c
     temperature:
       id: temperature
       name: ${room_name} Temperatur
@@ -77,6 +87,23 @@ sensor:
       name: ${room_name} Luftfeuchte
     address: 0x76
     update_interval: 60s
+
+binary_sensor:
+  - platform: homeassistant
+    id: local_window
+    entity_id: binary_sensor.${local_window_id}_offnet
+  - platform: homeassistant
+    id: s1_window
+    entity_id: binary_sensor.${s1_window_id}_offnet
+  - platform: homeassistant
+    id: s2_window
+    entity_id: binary_sensor.${s2_window_id}_offnet
+  - platform: homeassistant
+    id: s3_window
+    entity_id: binary_sensor.${s3_window_id}_offnet
+  - platform: homeassistant
+    id: s4_window
+    entity_id: binary_sensor.${s4_window_id}_offnet
 
 display:
   - platform: inkplate6
@@ -120,27 +147,43 @@ display:
 
       it.printf(750, 340, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(temperature).state);
       it.printf(750, 420, id(font_m), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(humidity).state);
+      if(id(local_window).state) {
+        it.image(510, 420+5, id(image_window_m), ImageAlign::BOTTOM_LEFT, COLOR_OFF, COLOR_ON);
+      }
 
       it.printf(110, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor1_name}");
       it.line(50, 500, 170, 500, COLOR_OFF);
       it.printf(170, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(s1_temp).state);
       it.printf(170, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s1_hum).state);
+      if(id(s1_window).state) {
+        it.image(50-5, 585+5, id(image_window_s), ImageAlign::BOTTOM_LEFT, COLOR_OFF, COLOR_ON);
+      }
 
       it.printf(280, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor2_name}");
       it.line(220, 500, 340, 500, COLOR_OFF);
       it.printf(340, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(s2_temp).state);
       it.printf(340, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s2_hum).state);
+      if(id(s2_window).state) {
+        it.image(220-5, 585+5, id(image_window_s), ImageAlign::BOTTOM_LEFT, COLOR_OFF, COLOR_ON);
+      }
 
       it.printf(450, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor3_name}");
       it.line(390, 500, 510, 500, COLOR_OFF);
       it.printf(510, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.1f°C", id(s3_temp).state);
       it.printf(510, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s3_hum).state);
+      if(id(s3_window).state) {
+        it.image(390-5, 585+5, id(image_window_s), ImageAlign::BOTTOM_LEFT, COLOR_OFF, COLOR_ON);
+      }
 
       it.printf(620, 495, id(font_s), COLOR_OFF, TextAlign::BASELINE_CENTER, "${sensor4_name}");
       it.line(560, 500, 680, 500, COLOR_OFF);
       it.printf(680, 540, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT,"%.1f°C", id(s4_temp).state);
       it.printf(680, 585, id(font_s), COLOR_OFF, TextAlign::BASELINE_RIGHT, "%.0f%%", id(s4_hum).state);
+      if(id(s4_window).state) {
+        it.image(560-5, 585+5, id(image_window_s), ImageAlign::BOTTOM_LEFT, COLOR_OFF, COLOR_ON);
+      }
 
 time:
   - platform: homeassistant
     id: ha_time
+    timezone: Europe/Berlin

@@ -16,5 +16,10 @@ substitutions:
   sensor3_id: joris
   sensor4_name: Wohn
   sensor4_id: wohnzimmer
+  local_window_id: schlafzimmer
+  s1_window_id: garagentor
+  s2_window_id: garagentor
+  s3_window_id: fenster_joris
+  s4_window_id: alle_wohnzimmer_fenster
 
 <<: !include common.yaml
