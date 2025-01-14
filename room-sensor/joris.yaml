@@ -2,5 +2,6 @@ substitutions:
   device_name: sensor-joris
   room_name: Joris
   home_power_sensor: "netz_leistung_1min_schnitt"
+  window_open_sensor: "irgendein_fenster"
 
 <<: !include common.yaml
