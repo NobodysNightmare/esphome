@@ -19,8 +19,8 @@ substitutions:
   sensor4_name: Schlaf
   sensor4_id: schlafzimmer
   local_window_sensor: alle_wohnzimmer_fenster_offnet
-  s1_window_sensor: garagentor_offnet
-  s2_window_sensor: garagentor_offnet
+  s1_window_sensor: none
+  s2_window_sensor: none
   s3_window_sensor: fenster_joris_offnet
   s4_window_sensor: fenster_schlafzimmer_offnet
   any_window_sensor: irgendein_fenster
