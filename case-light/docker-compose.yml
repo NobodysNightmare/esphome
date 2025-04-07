@@ -1,9 +1,0 @@
-services:
-  esphome:
-    image: ghcr.io/esphome/esphome
-    volumes:
-      - .:/config
-      - /etc/localtime:/etc/localtime:ro
-    restart: never
-    privileged: true
-    network_mode: host
