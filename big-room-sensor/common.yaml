@@ -49,11 +49,17 @@ image:
   - file: mdi:home
     id: image_home_s
     resize: 38x38
-  - file: mdi:arrow-left-bold
+  - file: mdi:arrow-left
     id: image_arrow_left_s
     resize: 38x38
-  - file: mdi:arrow-right-bold
+  - file: mdi:arrow-right
     id: image_arrow_right_s
+    resize: 38x38
+  - file: mdi:battery-outline
+    id: image_battery_discharge_s
+    resize: 38x38
+  - file: mdi:battery-charging
+    id: image_battery_charge_s
     resize: 38x38
 
 mcp23017:
@@ -90,6 +96,9 @@ sensor:
   - platform: homeassistant
     id: home_power
     entity_id: sensor.${home_power_sensor}
+  - platform: homeassistant
+    id: battery_power
+    entity_id: sensor.${battery_power_sensor}
   - platform: bme280_i2c
     temperature:
       id: temperature
@@ -167,12 +176,17 @@ display:
       // Current home power
       if(!isnan(id(home_power).state)) {
         it.image(20, 10, id(image_grid_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
-        if (id(home_power).state > 0) {
+        if (id(home_power).state >= 50) {
           it.image(56, 10, id(image_arrow_right_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
-        } else {
+        } else if (id(home_power).state <= -50) {
           it.image(56, 10, id(image_arrow_left_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
         }
         it.image(92, 10, id(image_home_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        if (id(battery_power).state <= -50) {
+          it.image(128, 10, id(image_battery_discharge_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        } else if (id(battery_power).state >= 50) {
+          it.image(128, 10, id(image_battery_charge_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+        }
         it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
       }
 
