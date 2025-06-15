@@ -21,6 +21,7 @@ font:
   - file: "DejaVuSans.ttf"
     id: deja_vu
     size: 18
+    glyphs: '!"%()+,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÄÜÖ abcdefghijklmnopqrstuvwxyzäüöß'
   - file: "DejaVuSans.ttf"
     id: deja_vu_big
     size: 32
