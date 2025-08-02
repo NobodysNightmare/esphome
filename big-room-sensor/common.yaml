@@ -61,6 +61,12 @@ image:
   - file: mdi:battery-charging
     id: image_battery_charge_s
     resize: 38x38
+  - file: mdi:car-outline
+    id: image_car_connected_s
+    resize: 38x38
+  - file: mdi:car-electric
+    id: image_car_charging_s
+    resize: 38x38
 
 mcp23017:
   - id: mcp23017_hub
@@ -99,6 +105,9 @@ sensor:
   - platform: homeassistant
     id: battery_power
     entity_id: sensor.${battery_power_sensor}
+  - platform: homeassistant
+    id: car_power
+    entity_id: sensor.${car_power_sensor}
   - platform: bme280_i2c
     temperature:
       id: temperature
@@ -131,6 +140,9 @@ binary_sensor:
   - platform: homeassistant
     id: any_window
     entity_id: binary_sensor.${any_window_sensor}
+  - platform: homeassistant
+    id: car_connected
+    entity_id: binary_sensor.${car_connected_sensor}
 
 display:
   - platform: inkplate6
@@ -182,12 +194,24 @@ display:
           it.image(56, 10, id(image_arrow_left_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
         }
         it.image(92, 10, id(image_home_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+
+        it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
+      }
+
+      // battery power
+      if(!isnan(id(battery_power).state)) {
         if (id(battery_power).state <= -50) {
           it.image(128, 10, id(image_battery_discharge_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
         } else if (id(battery_power).state >= 50) {
           it.image(128, 10, id(image_battery_charge_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
         }
-        it.printf(74, 50, id(font_s), COLOR_OFF, TextAlign::TOP_CENTER, "%.1fkW", abs(id(home_power).state) / 1000.0);
+      }
+
+      // car state
+      if (id(car_power).state > 0) {
+        it.image(164, 10, id(image_car_charging_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
+      } else if (id(car_connected).state) {
+        it.image(164, 10, id(image_car_connected_s), ImageAlign::TOP_LEFT, COLOR_OFF, COLOR_ON);
       }
 
       // top right indicators

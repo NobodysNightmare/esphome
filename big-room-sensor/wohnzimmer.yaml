@@ -10,6 +10,8 @@ substitutions:
 
   home_power_sensor: netz_leistung_1min_schnitt
   battery_power_sensor: venus_garage_leistung
+  car_power_sensor: warp3_2av9_powernow
+  car_connected_sensor: warp3_2av9_cable
 
   sensor1_name: Außen
   sensor1_id: garten
